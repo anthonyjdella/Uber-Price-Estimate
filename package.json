@@ -1,21 +1,19 @@
 {
   "name": "uber-price-estimate",
   "version": "1.0.0",
-  "description": "Front End Price Estimate example",
+  "description": "Use Uber API to get price estimates for rides and get picked up.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/devleague/Uber-Price-Estimate.git"
+    "url": "git+https://github.com/anthonyjdella/uber-price-estimate"
   },
-  "author": "Jon Borgonia <jon@devleague.com>",
+  "author": "Anthony Dellavecchia",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/devleague/Uber-Price-Estimate/issues"
   },
-  "homepage": "https://github.com/devleague/Uber-Price-Estimate#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
     "dotenv": "^5.0.1",
