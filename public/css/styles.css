@@ -1,3 +1,4 @@
+/* Height to map Div ID so that the Leaflet is visible */
 #map{
   height : 600px;
 }

@@ -1,6 +1,8 @@
 var router = require('express').Router();
 var request = require('request');
 var OAuth2 = require('oauth').OAuth2;
+require('dotenv').config();
+
 var uberApiUrl = 'https://sandbox-api.uber.com/v1/';
 var uberServerToken = process.env.UBER_SERVER_TOKEN;
 var uberClientID = process.env.UBER_CLIENT_ID;

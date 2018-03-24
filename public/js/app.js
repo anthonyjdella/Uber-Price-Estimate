@@ -1,69 +1,76 @@
-(function(){
+//This function is an IIFE (Immediately Invoked Function Expression). A JavaScript function that runs as soon as it is defined.Notice the '()' following this implementation
+(function () {
   "use strict";
 
   var apiUrl = '/api/';
 
-  var origin = { lat : 21.3088619, lng : -157.8086674}; // mic
+  //Define Richardson,Texas coordinates
+  var origin = { lat: 32.9465463, lng: -96.7654598 }; // mic
 
+  //Instance of map and setting default view
   var map = L.map('map').setView(origin, 17);
 
+  //Tile Layer required for Leaflet Map instance. Used to display layers
   L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+  }).addTo(map);
 
+  //Add marker icon to default location
   var originMarker = L.marker(origin).addTo(map);
   var destinationMarker = null;
   var prices = new Prices();
   var pricesView = new PricesView({
-    collection : prices
+    collection: prices
   });
   pricesView.render();
 
   var router = new Router();
   Backbone.history.start();
 
-  map.on('click', function(event){
-    if(destinationMarker){
-      // move it
+  // Change marker icon when user clicks map
+  map.on('click', function (event) {
+    if (destinationMarker) {
+      // Move marker
       destinationMarker.setLatLng(event.latlng);
-    }else{
-      // create marker
+    } else {
+      // Create marker
       destinationMarker = L.marker(event.latlng).addTo(map);
     }
 
-    // get price estimates from Uber API via our server
+    // Get price estimates from Uber API via our server
     getPriceEstimates(origin, event.latlng);
 
   });
 
   function getPriceEstimates(source, destination) {
-    $.get( apiUrl + 'estimates/price', {
-      source : JSON.stringify(source),
-      destination : JSON.stringify(destination)
+    $.get(apiUrl + 'estimates/price', {
+      source: JSON.stringify(source),
+      destination: JSON.stringify(destination)
     })
-    .done(function(data){
-      prices.reset();
-      var result = JSON.parse(data);
-      result.prices.forEach(function(price){
-        prices.add( new Price(
-          _.extend(price, {
-            source : origin,
-            destination : {
-              lat : destinationMarker._latlng.lat,
-              lng : destinationMarker._latlng.lng
-            }
-          })
-        ));
+      .done(function (data) {
+        prices.reset();
+        var result = JSON.parse(data);
+        console.log(result);
+        result.prices.forEach(function (price) {
+          prices.add(new Price(
+            _.extend(price, {
+              source: origin,
+              destination: {
+                lat: destinationMarker._latlng.lat,
+                lng: destinationMarker._latlng.lng
+              }
+            })
+          ));
+        });
+      })
+      .fail(function (err) {
+        prices.reset();
+        if (err.status && err.responseText) {
+          console.error(err.status, err.responseText);
+        } else {
+          console.error(err);
+        }
       });
-    })
-    .fail(function(err){
-      prices.reset();
-      if(err.status && err.responseText){
-        console.error(err.status, err.responseText);
-      }else{
-        console.error(err);
-      }
-    });
   }
 
 })();

@@ -17,9 +17,10 @@
   },
   "homepage": "https://github.com/devleague/Uber-Price-Estimate#readme",
   "dependencies": {
-    "body-parser": "^1.14.1",
-    "express": "^4.13.3",
-    "oauth": "^0.9.14",
-    "request": "^2.65.0"
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.3",
+    "oauth": "^0.9.15",
+    "request": "^2.85.0"
   }
 }
