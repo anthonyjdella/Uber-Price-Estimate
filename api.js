@@ -1,15 +1,21 @@
+// To route all requests
+// Client to server, aka sending data to Uber API
+
 var router = require('express').Router();
 var request = require('request');
 var OAuth2 = require('oauth').OAuth2;
 require('dotenv').config();
 
+// Sandbox is development env.
 var uberApiUrl = 'https://sandbox-api.uber.com/v1/';
 var uberServerToken = process.env.UBER_SERVER_TOKEN;
 var uberClientID = process.env.UBER_CLIENT_ID;
 var uberClientSecret = process.env.UBER_CLIENT_SECRET;
-// use this if running on external host
+
+// Use this if running on external host
 // var serverUrl = 'http://' + require("os").hostname() + ':' + ( process.env.PORT || 3000 );
 var serverUrl = 'http://localhost:' + ( process.env.PORT || 3000 );
+// OAuth2 is authorization on how to get limited access to certain sites
 var oauth2 = new OAuth2(
     uberClientID,
     uberClientSecret,
@@ -18,10 +24,12 @@ var oauth2 = new OAuth2(
     'oauth/token',
     null);
 
+// Routes an HTTP GET request.. Routing just means how the client will respond to a client request.
+// “Listens” for requests that match the specified route(s) and method(s), and when it detects a match, it calls the specified callback function.
 router.get('/estimates/price', function(req, res){
   var source = JSON.parse(req.query.source);
   var destination = JSON.parse(req.query.destination);
-  // create http request to uber api
+  // Create HTTP request to Uber API
   request.get({
     url : uberApiUrl + 'estimates/price',
     strictSSL: false,
@@ -40,6 +48,7 @@ router.get('/estimates/price', function(req, res){
   });
 });
 
+// Routes an HTTP POST request
 router.post('/get_ride', function(req, res){
   if( !req.body.hasOwnProperty('auth_token') ){
     return res.json({
@@ -57,7 +66,7 @@ router.post('/get_ride', function(req, res){
     product_id : req.body.product_id
   };
 
-  // create http request to uber api
+  // Create HTTP request to Uber API
   request.post({
     url : uberApiUrl + 'requests',
     json : uberRequest,
@@ -75,7 +84,8 @@ router.post('/get_ride', function(req, res){
 
 });
 
-// from redirect after auth
+// After user authorizes Uber in new window, redirected here. 
+// From redirect after auth
 router.get('/oauth/cb', function(req, res){
   var code = req.query.code;
 
@@ -97,7 +107,7 @@ router.get('/oauth/cb', function(req, res){
         console.log(results.error);
         res.json(results.error);
       } else {
-        // got token, send back to client
+        // If we get the access token, send back to client to store in cookies or something
         // POPUP Blocker must be disabled, or find workaround, or use redirect instead
         res.send(closeAndRedirectScript(access_token));
       }
@@ -115,10 +125,12 @@ function closeAndRedirectScript(access_token) {
           </script>';
 }
 
+// Stores the access token
 function redirectAccessTokenUrl(access_token) {
   return serverUrl + '#store-auth-token/' + access_token;
 }
 
+// This is presented to the client with a new window. Then the user authorizes Uber. Once authorized, it goes back to callback (those happen somewhere else)
 function getAuthorizeUrl(){
   return oauth2.getAuthorizeUrl({
       redirect_uri: serverUrl + '/api/oauth/cb',

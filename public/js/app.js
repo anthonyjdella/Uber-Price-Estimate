@@ -1,4 +1,5 @@
-//This function is an IIFE (Immediately Invoked Function Expression). A JavaScript function that runs as soon as it is defined.Notice the '()' following this implementation
+// This function is an IIFE (Immediately Invoked Function Expression). A JavaScript function that runs as soon as it is defined.Notice the '()' following this implementation
+
 (function () {
   "use strict";
 
@@ -42,6 +43,7 @@
 
   });
 
+  // Pass current and destination location to get price estimates
   function getPriceEstimates(source, destination) {
     $.get(apiUrl + 'estimates/price', {
       source: JSON.stringify(source),
