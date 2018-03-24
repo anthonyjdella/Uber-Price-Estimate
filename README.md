@@ -1,6 +1,6 @@
 # Uber Price Estimate
 
-Forker from [develeague](https://github.com/devleague/Uber-Price-Estimate).
+Forked from [develeague](https://github.com/devleague/Uber-Price-Estimate).
 
 Front end tool for getting Uber price estimates and requesting a ride.
 
